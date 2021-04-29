@@ -13,7 +13,7 @@ parser.add_argument('domain')
 args = parser.parse_args()
 domain = args.domain
 
-# SECTION NAME: Get SSL Cert info
+# SECTION NAME: Get SSL Cert info and Expiration
 cert = ssl.get_server_certificate((domain, 443))
 x509 = OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_PEM, cert)
 x509info = x509.get_notAfter()
