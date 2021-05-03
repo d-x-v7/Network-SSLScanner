@@ -7,26 +7,33 @@ IP_ADDRESS = sys.argv[1]
 # Extract HTTPS certificate and see when it will expire
 # Generate output that can be used to determine which certs are expired or which ones will expire in within the next year. Could be email or a report.
 
-
-scan = subprocess.run(['whois', IP_ADDRESS],
-    capture_output=True,
-    text=True,
-)
-
-# This outputs all ip ranges that match the regex. We just want the specific IPs.
-# scan2 = subprocess.run(['grep', '-E', '-o', '((([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]))\ -\ ((([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$)'],
+# This outputs the subnet, but has a new line in it.
+# scan2 = subprocess.run(['grep', '-E', '-o', '(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(3[0-2]|[1-2][0-9]|[0-9]))'],
 #     capture_output=True,
 #     text=True,
 #     input=scan.stdout
 # )
 
-scan2 = subprocess.run(['grep', '-E', '-o', '((([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]))\ -\ ((([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$)'],
+whois1 = subprocess.run(['whois', IP_ADDRESS],
     capture_output=True,
     text=True,
-    input=scan.stdout
 )
 
-# scan = subprocess.run(['whois', IP_ADDRESS], capture_output=True, text=True)
-print(scan2.stdout)
+whois2 = subprocess.run(['grep', '-E', '-o', '(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(3[0-2]|[1-2][0-9]|[0-9]))'],
+    capture_output=True,
+    text=True,
+    input=whois1.stdout,
+)
 
+finalsubnet = subprocess.run(['tr', '-d', "\n"],
+    capture_output=True,
+    text=True,
+    input=whois2.stdout
+)
+
+whoisresults = str(finalsubnet.stdout)
+
+# scan = subprocess.run(['whois', IP_ADDRESS], capture_output=True, text=True)
+# print(scan2.stdout)
+print(whoisresults)
 # Script to identify and scan subnets

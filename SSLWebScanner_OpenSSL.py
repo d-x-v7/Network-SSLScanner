@@ -3,18 +3,21 @@ import ssl, socket
 import argparse
 import datetime
 
+# Trying to set a variable to use later on, so I can combine this with the larger code.
+ip_address = '173.241.154.15 173.241.154.70'
+
 # SECTION NAME: Current Date
 current_time = datetime.datetime.now()
 
-# SECTION NAME: Get Domain
-parser = argparse.ArgumentParser()
-# This tells the parser to look for an argument from the user after the script is called.
-parser.add_argument('domain')
-args = parser.parse_args()
-domain = args.domain
+# # SECTION NAME: Get Domain
+# parser = argparse.ArgumentParser()
+# # This tells the parser to look for an argument from the user after the script is called.
+# parser.add_argument('domain')
+# args = parser.parse_args()
+# domain = args.domain
 
 # SECTION NAME: Get SSL Cert info and Expiration
-cert = ssl.get_server_certificate((domain, 443))
+cert = ssl.get_server_certificate((ip_address, 443))
 x509 = OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_PEM, cert)
 x509info = x509.get_notAfter()
 
@@ -29,5 +32,9 @@ exp_date = str(exp_day) + '-' + str(exp_month) + '-' + str(exp_year)
 
 if exp_year == current_time.year:
     print('SSL Certificate for domain', domain, 'will be expired on (DD-MM-YYYY)', exp_date)
-else:
+elif exp_year != current_time.year:
     print('SSL Certificate does not expire this year')
+elif exp_year == None:
+    print('No SSl Certificate exists')
+else:
+    print('Oops, something went wrong')
