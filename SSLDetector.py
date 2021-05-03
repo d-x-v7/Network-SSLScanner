@@ -49,7 +49,6 @@ nm = nmap.PortScanner()
 
 # Defines the range of which to scan along with the port.
 scan_range = nm.scan(whoisresults, '443')
-# scan_range = nm.scan('173.241.154.15', '443')
 
 
 nm.all_hosts()
@@ -68,13 +67,6 @@ print("Found hosts running port 443, will now check to see their SSL certificate
 
 # SECTION NAME: Current Date
 current_time = datetime.datetime.now()
-
-# # SECTION NAME: Get Domain
-# parser = argparse.ArgumentParser()
-# # This tells the parser to look for an argument from the user after the script is called.
-# parser.add_argument('domain')
-# args = parser.parse_args()
-# domain = args.domain
 
 # SECTION NAME: Get SSL Cert info and Expiration
 cert = ssl.get_server_certificate((httpshosts, 443))
